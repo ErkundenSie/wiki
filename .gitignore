@@ -1,4 +1,6 @@
 #HELP.md注释掉
+#忽略log文件夹
+/log/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
