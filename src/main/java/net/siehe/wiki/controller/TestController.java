@@ -1,7 +1,13 @@
 package net.siehe.wiki.controller;
 
+import net.siehe.wiki.domain.Test;
+import net.siehe.wiki.service.TestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 //设置Auto Import==》Optimize imports on the fly打钩自动删除没用的
 //import java.util.Map;
@@ -13,6 +19,8 @@ public class TestController {
 //    @Value("${test.hello:TEST}")
     @Value("${test.hello:TEST}")
     private String testHello;
+    @Resource
+    private TestService testService;
     /**
      * 常用GET查,POST增,PUT改,DELETE删
      * 传统/user?id=1
@@ -32,5 +40,9 @@ public class TestController {
     @PostMapping("/hello/post")
     public String helloPost(String name) {
         return "Hello World! Post" + name;
+    }
+    @GetMapping("/test/list")
+    public List<Test> list() {
+        return testService.list();
     }
 }

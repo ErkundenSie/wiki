@@ -1,5 +1,6 @@
 package net.siehe.wiki.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.core.env.Environment;
 // 含@ComponentScan但只会扫描到所在包下的子包，非同包加@ComponentScan("包名")多个包({"包名1","包名2"})
 @ComponentScan("net.siehe")
 @SpringBootApplication
+@MapperScan("net.siehe.wiki.mapper")//让项目知道mapper是持久层
 public class WikiApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
