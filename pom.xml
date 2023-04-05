@@ -21,6 +21,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--添加热部署-->
+        <!--去设置Compiler 在Build project automatically打钩=》在2021之后settings里找到 Advansed Settings勾选Allow auto-make-->
+        <!--点右上角锤子快速部署-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
