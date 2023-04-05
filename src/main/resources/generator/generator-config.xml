@@ -39,9 +39,9 @@
         <javaClientGenerator targetProject="src\main\java"
                              targetPackage="net.siehe.wiki.mapper"
                              type="XMLMAPPER"/>
-
-        <table tableName="demo" domainObjectName="Demo"/>
-        <!--        <table tableName="ebook" domainObjectName="Ebook"/>-->
+        <!--表名与生成实体类名称-->
+<!--        <table tableName="demo" domainObjectName="Demo"/>-->
+                <table tableName="ebook" domainObjectName="Ebook"/>  <!--默认就是Ebook可以不用写domainObjectName="Ebook"-->
         <!--        <table tableName="category" domainObjectName="Category"/>-->
         <!--        <table tableName="doc"/>-->
 <!--        <table tableName="content"/>-->
