@@ -3,8 +3,6 @@
       <a-layout-sider width="200" style="background: #fff">
           <a-menu
                   mode="inline"
-                  v-model:selectedKeys="selectedKeys2"
-                  v-model:openKeys="openKeys"
                   :style="{ height: '100%', borderRight: 0 }"
           >
               <a-sub-menu key="sub1">
@@ -55,8 +53,19 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+//导入集成HTTP库Axios
+import axios from 'axios';
 export default defineComponent({
   name: 'HomeView',
+    // setup() 初始化化方法
+    // (response)=>{}定义函数 参数response
+    setup() {
+      console.log("setup");
+      axios.get("http://localhost:8880/ebook/list?name=Python").then(
+          (response) => {
+              console.log(response);
+          }
+      )
+    }
 });
 </script>
