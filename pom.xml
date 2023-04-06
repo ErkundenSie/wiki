@@ -88,7 +88,21 @@
             <artifactId>spring-boot-starter-swagger</artifactId>
             <version>1.5.1.RELEASE</version>
         </dependency>
-        <!--end-->
+        <!--end--><!--end-->
+
+        <!--AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!--AOP中做了处理，排除字段,敏感字段或太长的字段不显示使用了JSONObject所以导入-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>2.0.26</version>
+        </dependency>
+        <!--end--><!--end-->
+
     </dependencies>
 
     <build>
