@@ -2,20 +2,20 @@
     <a-layout>
         <the-header></the-header>
         <router-view/>
-        <a-layout-footer style="text-align: center">
-             JavaWiki ©2023 Created by Siehe
-        </a-layout-footer>
+        <the-footer></the-footer>
     </a-layout>
 </template>
 <!--import导入,components,<the-header>调用-->
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TheHeader from "@/components/the-header.vue";
+import TheFooter from "@/components/the-footer.vue";
 
 export default defineComponent({
     name: 'app',
     components: {
         TheHeader,
+        TheFooter,
     }
 });
 </script>
