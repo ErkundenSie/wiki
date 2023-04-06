@@ -106,7 +106,7 @@ export default defineComponent({
 
         onMounted(() => {
             console.log("onMounted");
-            axios.get("http://localhost:8880/ebook/list?name=Python").then(
+            axios.get("http://localhost:8880/ebook/list").then(
                 (response) => {
                     const date = response.data; //获取response里面data数据（commonResp数据
                     ebooks.value = date.content; //用ebooks.value赋值，不用ebooks
@@ -136,3 +136,13 @@ export default defineComponent({
     }
 });
 </script>
+<!--scoped表示样式只在当前组件起作用-->
+<style scoped>
+    .ant-avatar {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        border-radius: 8%;
+        margin: 5px 0;
+    }
+</style>
