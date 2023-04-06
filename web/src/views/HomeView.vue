@@ -105,8 +105,9 @@ export default defineComponent({
         const ebooks1 = reactive({books: []})
 
         onMounted(() => {
-            console.log("onMounted");
-            axios.get(process.env.VUE_APP_SERVER + "/ebook/list").then(
+            console.log("onMounted2222");
+            // 在main.ts中修改axios默认请求地址就不用写前面的链接了
+            axios.get("/ebook/list").then(
                 (response) => {
                     const date = response.data; //获取response里面data数据（commonResp数据
                     ebooks.value = date.content; //用ebooks.value赋值，不用ebooks
