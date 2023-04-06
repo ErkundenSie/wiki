@@ -14,3 +14,11 @@ const icons: any = Icons;
 for (const i in icons) {
     app.component(i, icons[i]);
 }
+
+/**
+ * 多环境配置文件要放在web根目录下
+ * .env.xxx,后缀xxx和package.json里的指令的 -mode xxx对应
+ * */
+//打印日志环境
+console.log('环境：',process.env.NODE_ENV);
+console.log('服务端：',process.env.VUE_APP_SERVER);
