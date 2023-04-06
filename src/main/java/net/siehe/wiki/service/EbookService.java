@@ -6,6 +6,7 @@ import net.siehe.wiki.domain.EbookExample;
 import net.siehe.wiki.mapper.EbookMapper;
 import net.siehe.wiki.req.EbookReq;
 import net.siehe.wiki.resp.EbookResp;
+import net.siehe.wiki.util.CopyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +25,22 @@ public class EbookService {
         criteria.andNameLike("%" + ebookReq.getName() +"%");//添加条件左右匹配
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
-        List<EbookResp> respList = new ArrayList<>(); //创建一个数组ebookList的部分放进去
-        //两种for循环 fori、iter
-        for (Ebook ebook : ebookList) {
-//            respList.add(ebook);//类型不一致不能加
-            //将ebook内容复制到新的ebookResp中然后将ebookResp放入respList
-            EbookResp ebookResp = new EbookResp();
-//            ebookResp.setId(ebook.getId());
-            BeanUtils.copyProperties(ebook,ebookResp);//BeanUtils.copyProperties()数组复制
-//            ebookResp.setId(123L);测试热部署是否生效
-            respList.add(ebookResp);
-        }
+//        List<EbookResp> respList = new ArrayList<>(); //创建一个数组ebookList的部分放进去
+//        //两种for循环 fori、iter
+//        //respList.add(ebook);//类型不一致不能加
+//        for (Ebook ebook : ebookList) {
+//            //将ebook内容复制到新的ebookResp中然后将ebookResp放入respList
+////            EbookResp ebookResp = new EbookResp();
+////            BeanUtils.copyProperties(ebook,ebookResp);//BeanUtils.copyProperties()数组复制，或者 ebookResp.setId(ebook.getId());+
+//            /*可以提取成工具类方便调用eg1对象复制*/
+//            EbookResp ebookResp = CopyUtil.copy(ebook, EbookResp.class);
+//            respList.add(ebookResp);
+//        }
+//        return respList;
 
-        return respList;
+        /*可以提取成工具类方便调用eg2列表复制*/
+        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        return list;
+
     }
 }
