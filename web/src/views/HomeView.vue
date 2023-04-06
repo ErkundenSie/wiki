@@ -106,7 +106,7 @@ export default defineComponent({
 
         onMounted(() => {
             console.log("onMounted");
-            axios.get("http://localhost:8880/ebook/list").then(
+            axios.get(process.env.VUE_APP_SERVER + "/ebook/list").then(
                 (response) => {
                     const date = response.data; //获取response里面data数据（commonResp数据
                     ebooks.value = date.content; //用ebooks.value赋值，不用ebooks
