@@ -92,7 +92,7 @@ for (let i = 0; i < 23; i++) {
     });
 }
 export default defineComponent({
-    name: 'HomeView',
+    name: 'Home',
     // setup() 初始化化方法 Vue2.0中的data()、mounted()、methods()被setup()取代
     // (response)=>{}定义函数 参数response
     // 初始化的逻辑都写到onMountted方法里，setup放一些参数定义、方法定义
