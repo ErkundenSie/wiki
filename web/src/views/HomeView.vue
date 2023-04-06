@@ -97,7 +97,7 @@ export default defineComponent({
     // (response)=>{}定义函数 参数response
     // 初始化的逻辑都写到onMountted方法里，setup放一些参数定义、方法定义
     setup() {
-        console.log("setup");
+        // console.log("setup");
         /*Vue3数据绑定显示列表数据的两种方式ref，reactive*/
         const ebooks = ref();//Vue3新增了ref用来定义响应式数据（实时相应
         //Vue3新增的reactive,books是自己定义的属性用来放电子书列表
@@ -105,14 +105,14 @@ export default defineComponent({
         const ebooks1 = reactive({books: []})
 
         onMounted(() => {
-            console.log("onMounted2222");
+            // console.log("onMounted2222");
             // 在main.ts中修改axios默认请求地址就不用写前面的链接了
             axios.get("/ebook/list").then(
                 (response) => {
                     const date = response.data; //获取response里面data数据（commonResp数据
                     ebooks.value = date.content; //用ebooks.value赋值，不用ebooks
                     ebooks1.books = date.content;
-                    console.log(response);
+                    // console.log(response); axios 拦截器已使用
                 }
             );
         });
