@@ -10,6 +10,7 @@ import net.siehe.wiki.req.EbookSaveReq;
 import net.siehe.wiki.resp.EbookQueryResp;
 import net.siehe.wiki.resp.PageResp;
 import net.siehe.wiki.util.CopyUtil;
+import net.siehe.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,11 @@ import java.util.List;
 
 @Service
 public class EbookService {
+    // @Resource是jdk自带的，@Autowired是spring自带的
     @Resource
     private EbookMapper ebookMapper;
+    @Resource
+    private SnowFlake snowFlake;
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
 
     public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq){
@@ -71,7 +75,10 @@ public class EbookService {
     public void save(EbookSaveReq ebookReq) {
         Ebook ebook = CopyUtil.copy(ebookReq,Ebook.class);
         //根据id是否为空判断新增或更新
+        //id有几种算法，一种是最简单的自增，还有一种是uuid，还有就是雪花算法
         if (ObjectUtils.isEmpty(ebookReq.getId())){
+            //调用雪花算法
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else {
             ebookMapper.updateByPrimaryKey(ebook);

@@ -27,14 +27,14 @@ public class EbookController {
     }
 
     /**
-     * 保存前端返回的数据
+     * 新增或保存前端返回的数据
      * 用PostMapping加@RequestBody对应json方式的提交，form方式不用
      * @param ebookReq
      * @return
      */
     @PostMapping("/save")
     public CommonResp save(@RequestBody EbookSaveReq ebookReq) {
-        CommonResp objectCommonResp = new CommonResp<>();//不需要返回直接不用泛型
+        CommonResp objectCommonResp = new CommonResp();//不需要返回直接不用泛型
         ebookService.save(ebookReq);
         return objectCommonResp;
     }

@@ -7,7 +7,11 @@ GET http://localhost:8880/ebook/list?page=1&size=4
 POST http://localhost:8880/ebook/save
 Content-Type: application/json
 
-{}
+{
+  "id": 34916597428785152,
+  "name": "34916",
+  "cover": "22222"
+}
 
 ###
 

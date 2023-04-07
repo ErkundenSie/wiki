@@ -3,6 +3,11 @@
         <a-layout-content
                 :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
         >
+            <p>
+                <a-button type="primary" @click="add()" size="large">
+                    新增
+                </a-button>
+            </p>
 
             <a-table
                     :columns="columns"
@@ -45,10 +50,10 @@
                 <a-input v-model:value="ebook.name"/>
             </a-form-item>
             <a-form-item label="分类一">
-                <a-input v-model:value="ebook.category1Id"/>
+<!--                <a-input v-model:value="ebook.category1Id"/>-->
             </a-form-item>
             <a-form-item label="分类二">
-                <a-input v-model:value="ebook.category2Id"/>
+<!--                <a-input v-model:value="ebook.category2Id"/>-->
             </a-form-item>
             <a-form-item label="描述">
                 <a-input v-model:value="ebook.desc" type="textarea"/>
@@ -86,13 +91,10 @@ export default defineComponent({
             },
             {
                 title: '分类一',
-                key: 'category1Id',
                 dataIndex: 'category1Id',
             },
             {
                 title: '分类二',
-                key: 'category2Id',
-                // slots: {customRender: 'name'}
                 dataIndex: 'category2Id',
             },
             {
@@ -163,18 +165,25 @@ export default defineComponent({
                     modalLoading.value = false;
                     handleQuery({
                         page: pagination.value.current, //查当前页
-                        size: pagination.value.pageSize
+                        size: pagination.value.pageSize,
                     });
                 }
             });
         }
+        /**
+         * 新增
+         */
+        const add = () => {
+            modalVisible.value = true;
+            ebook.value = {}
+        };
         /**
          * 编辑
          */
         const edit = (record: any) => {
             modalVisible.value = true;
             ebook.value = record
-        }
+        };
         /**
          * 周期函数
          */
@@ -187,6 +196,7 @@ export default defineComponent({
         });
 
         return {
+            //表格的
             ebooks,
             pagination,
             columns,
@@ -194,6 +204,9 @@ export default defineComponent({
             handleTableChange,
 
             edit,
+            add,
+
+            //表单类
             ebook,
             modalVisible,
             modalLoading,
