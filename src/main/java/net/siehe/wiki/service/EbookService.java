@@ -1,23 +1,21 @@
 package net.siehe.wiki.service;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import net.siehe.wiki.domain.Ebook;
 import net.siehe.wiki.domain.EbookExample;
 import net.siehe.wiki.mapper.EbookMapper;
-import net.siehe.wiki.req.EbookReq;
-import net.siehe.wiki.resp.EbookResp;
+import net.siehe.wiki.req.EbookQueryReq;
+import net.siehe.wiki.req.EbookSaveReq;
+import net.siehe.wiki.resp.EbookQueryResp;
 import net.siehe.wiki.resp.PageResp;
 import net.siehe.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,7 +24,7 @@ public class EbookService {
     private EbookMapper ebookMapper;
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
 
-    public PageResp<EbookResp> list(EbookReq ebookReq){
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq){
 
 //        return ebookMapper.selectByExample(null);
         EbookExample ebookExample = new EbookExample();
@@ -58,11 +56,25 @@ public class EbookService {
 //        return respList;
 
         /*可以提取成工具类方便调用eg2列表复制*/
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 //        return list;
-        PageResp<EbookResp> pageResp = new PageResp();
+        PageResp<EbookQueryResp> pageResp = new PageResp();
         pageResp.setList(list);
         pageResp.setTotal(pageInfo.getTotal());
         return pageResp;
+    }
+
+    /**
+     * 保存
+     * @param ebookReq
+     */
+    public void save(EbookSaveReq ebookReq) {
+        Ebook ebook = CopyUtil.copy(ebookReq,Ebook.class);
+        //根据id是否为空判断新增或更新
+        if (ObjectUtils.isEmpty(ebookReq.getId())){
+            ebookMapper.insert(ebook);
+        }else {
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }

@@ -146,18 +146,27 @@ export default defineComponent({
             });
         };
         /**
-         * 表单2s后关闭
+         * 表单
          * 定义变量及方法
+         * 保存
          */
         const ebook = ref({});
         const modalVisible = ref(false);
         const modalLoading = ref(false);
         const handleModalOk = () => {
-            modalLoading.value = true;
-            setTimeout(() => {
-                modalVisible.value = false;
-                modalLoading.value = false;
-            }, 2000);
+            modalLoading.value = true; //先弹出窗口
+            axios.post("/ebook/save",ebook.value).then((response) => {
+                const data = response.data; // data = commonResp
+                if(data.success) {
+                    //保存成功拿到结果后关闭窗口重新加载列表
+                    modalVisible.value = false;
+                    modalLoading.value = false;
+                    handleQuery({
+                        page: pagination.value.current, //查当前页
+                        size: pagination.value.pageSize
+                    });
+                }
+            });
         }
         /**
          * 编辑
