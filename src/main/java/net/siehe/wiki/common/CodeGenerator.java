@@ -1,3 +1,4 @@
+/*
 package net.siehe.wiki.common;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
@@ -15,11 +16,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CodeGenerator {
-    /**
+    */
+/**
      * <p>
      * 读取控制台内容
      * </p>
-     */
+     *//*
+
     public static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
@@ -34,13 +37,15 @@ public class CodeGenerator {
         throw new MybatisPlusException("请输⼊正确的" + tip + "！");
     }
 
-    /**
+    */
+/**
      * 操作步骤：
      *  1.修改数据源包括地址密码信息，对应代码标记：⼀、 下同
      *  2.模块配置，可以修改包名
      *  3.修改模板（这步可忽略）
      * @param args
-     */
+     *//*
+
     public static void main(String[] args) {
         // 代码⽣成器
         AutoGenerator mpg = new AutoGenerator();
@@ -105,7 +110,8 @@ public class CodeGenerator {
                         StringPool.DOT_XML;
             }
         });
-        /*
+        */
+/*
         cfg.setFileCreate(new IFileCreate() {
             @Override
             public boolean isCreate(ConfigBuilder configBuilder, FileType fileType,
@@ -120,7 +126,8 @@ String filePath) {
                 return true;
             }
         });
-        */
+        *//*
+
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
         // 配置模板
@@ -129,11 +136,13 @@ String filePath) {
         // 配置⾃定义输出模板
         //指定⾃定义模板路径，注意不要带上.ftl/.vm, 会根据使⽤的模板引擎⾃动识别
         // 三、修改模板
-        /*templateConfig.setEntity("templates/entity2.java");
+        */
+/*templateConfig.setEntity("templates/entity2.java");
         templateConfig.setService("templates/service2.java");
         templateConfig.setController("templates/controller2.java");
         templateConfig.setMapper("templates/mapper2.java");
-        templateConfig.setServiceImpl("templates/serviceimpl2.java");*/
+        templateConfig.setServiceImpl("templates/serviceimpl2.java");*//*
+
 
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
@@ -161,4 +170,4 @@ String filePath) {
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
     }
-}
+}*/

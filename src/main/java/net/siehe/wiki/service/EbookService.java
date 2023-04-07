@@ -8,6 +8,7 @@ import net.siehe.wiki.domain.EbookExample;
 import net.siehe.wiki.mapper.EbookMapper;
 import net.siehe.wiki.req.EbookReq;
 import net.siehe.wiki.resp.EbookResp;
+import net.siehe.wiki.resp.PageResp;
 import net.siehe.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class EbookService {
     private EbookMapper ebookMapper;
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
 
-    public List<EbookResp> list(EbookReq ebookReq){
+    public PageResp<EbookResp> list(EbookReq ebookReq){
 
 //        return ebookMapper.selectByExample(null);
         EbookExample ebookExample = new EbookExample();
@@ -35,7 +36,7 @@ public class EbookService {
             criteria.andNameLike("%" + ebookReq.getName() +"%");//添加条件左右匹配
         }
         //导入PageHelper依赖，调用PageHelper，注意此插件页码从1开始不是0，而且只对最近的select起作用对下面的ebookList=不起作用
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 //        ebookList = ebookMapper.selectByExample(ebookExample);
 //        private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
@@ -58,7 +59,10 @@ public class EbookService {
 
         /*可以提取成工具类方便调用eg2列表复制*/
         List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
-        return list;
-
+//        return list;
+        PageResp<EbookResp> pageResp = new PageResp();
+        pageResp.setList(list);
+        pageResp.setTotal(pageInfo.getTotal());
+        return pageResp;
     }
 }
