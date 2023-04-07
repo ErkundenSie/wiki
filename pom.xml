@@ -103,6 +103,15 @@
         </dependency>
         <!--end--><!--end-->
 
+        <!-- 集成pagehelper 插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.6</version>
+        </dependency>
+
+        <!--pagehelper 插件 end-->
+
     </dependencies>
 
     <build>

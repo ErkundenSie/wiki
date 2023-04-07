@@ -1,12 +1,16 @@
 package net.siehe.wiki.service;
 
 import com.fasterxml.jackson.databind.util.BeanUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import net.siehe.wiki.domain.Ebook;
 import net.siehe.wiki.domain.EbookExample;
 import net.siehe.wiki.mapper.EbookMapper;
 import net.siehe.wiki.req.EbookReq;
 import net.siehe.wiki.resp.EbookResp;
 import net.siehe.wiki.util.CopyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -19,7 +23,10 @@ import java.util.List;
 public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
+    private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
+
     public List<EbookResp> list(EbookReq ebookReq){
+
 //        return ebookMapper.selectByExample(null);
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria(); //先创建ebookExample在调用内部类创建条件
@@ -27,7 +34,14 @@ public class EbookService {
         if(!ObjectUtils.isEmpty(ebookReq.getName())){
             criteria.andNameLike("%" + ebookReq.getName() +"%");//添加条件左右匹配
         }
+        //导入PageHelper依赖，调用PageHelper，注意此插件页码从1开始不是0，而且只对最近的select起作用对下面的ebookList=不起作用
+        PageHelper.startPage(1,3);
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+//        ebookList = ebookMapper.selectByExample(ebookExample);
+//        private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);//打印总行数页数日志
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("总行数：{}",pageInfo.getTotal());//一般返回总行数
+        LOG.info("总页数：{}",pageInfo.getPages());
 
 //        List<EbookResp> respList = new ArrayList<>(); //创建一个数组ebookList的部分放进去
 //        //两种for循环 fori、iter
