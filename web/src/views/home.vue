@@ -76,20 +76,20 @@
 import {defineComponent, onMounted, reactive, ref, toRef,} from 'vue';
 //导入集成HTTP库Axios
 import axios from 'axios';
-
-const listData: any = [];
-
-for (let i = 0; i < 23; i++) {
-    listData.push({
-        href: 'https://www.antdv.com/',
-        title: `ant design vue part ${i}`,
-        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        description:
-            'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content:
-            'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-    });
-}
+////假数据
+// const listData: any = [];
+//
+// for (let i = 0; i < 23; i++) {
+//     listData.push({
+//         href: 'https://www.antdv.com/',
+//         title: `ant design vue part ${i}`,
+//         avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//         description:
+//             'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//         content:
+//             'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//     });
+// }
 export default defineComponent({
     name: 'Home',
     // setup() 初始化化方法 Vue2.0中的data()、mounted()、methods()被setup()取代
@@ -106,11 +106,17 @@ export default defineComponent({
         onMounted(() => {
             // console.log("onMounted2222");
             // 在main.ts中修改axios默认请求地址就不用写前面的链接了
-            axios.get("/ebook/list").then(
+            //params:{}返回后端，1000条一页（查出全部
+            axios.get("/ebook/list",{
+                params: {
+                    page: 1,
+                    size: 1000
+                }
+            }).then(
                 (response) => {
                     const date = response.data; //获取response里面data数据（commonResp数据
-                    ebooks.value = date.content; //用ebooks.value赋值，不用ebooks
-                    ebooks1.books = date.content;
+                    ebooks.value = date.content.list; //用ebooks.value赋值，不用ebooks
+                    // ebooks1.books = date.content;
                     // console.log(response); axios 拦截器已使用
                 }
             );
@@ -119,8 +125,8 @@ export default defineComponent({
         //返回数据
         return {
             ebooks,
-            ebooks2: toRef(ebooks1, "books"), //toRef把books变成响应式变量,定义变量名ebooks2
-            listData,
+            // ebooks2: toRef(ebooks1, "books"), //toRef把books变成响应式变量,定义变量名ebooks2
+            // listData,
             pagination: {
                 onChange: (page: any)=> {
                     console.log(page);
