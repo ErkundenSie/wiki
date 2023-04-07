@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-        <a-layout-sider width="200" style="background: #fff">
+         <a-layout-sider width="200" style="background: #fff">
             <a-menu
                     mode="inline"
                     :style="{ height: '100%', borderRight: 0 }"
@@ -69,7 +69,6 @@
             </a-list>
 
         </a-layout-content>
-
     </a-layout>
 </template>
 
