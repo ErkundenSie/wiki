@@ -19,7 +19,7 @@
                     <!--a-space空格组件-->
                     <a-space size="small">
 
-                        <a-button type="primary">
+                        <a-button type="primary" @click="edit">
                                   编辑
                         </a-button>
                             <a-button type="danger">
@@ -30,7 +30,13 @@
             </a-table>
         </a-layout-content>
     </a-layout>
-
+    <a-modal
+        title="电子书表单"
+        v-model:visible="modalVisible"
+        :confirm-loading="modalLoading"
+        @ok="handleModalOk"
+    >
+    </a-modal>
 </template>
 
 <script lang="ts">
@@ -121,7 +127,28 @@ export default defineComponent({
                 size: pagination.pageSize
             });
         };
-
+        /**
+         * 表单2s后关闭
+         * 定义变量及方法
+         */
+        const modalVisible = ref(false);
+        const modalLoading = ref(false);
+        const handleModalOk = () => {
+            modalLoading.value = true;
+            setTimeout(() => {
+                modalVisible.value = false;
+                modalLoading.value = false;
+            }, 2000);
+        }
+        /**
+         * 编辑
+         */
+        const edit = () => {
+            modalVisible.value = true;
+        }
+        /**
+         * 周期函数
+         */
         //初始查一次，返回到上面handleQuery方法，page,size需要和后端对应
         onMounted(() => {
             handleQuery({
@@ -136,6 +163,11 @@ export default defineComponent({
             columns,
             loading,
             handleTableChange,
+
+            edit,
+            modalVisible,
+            modalLoading,
+            handleModalOk
         }
     }
 });
