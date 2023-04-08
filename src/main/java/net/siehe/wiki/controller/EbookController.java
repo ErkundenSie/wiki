@@ -9,6 +9,7 @@ import net.siehe.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/ebook")
@@ -16,8 +17,9 @@ public class EbookController {
     @Resource
     private EbookService ebookService;
     //修改统一返回类型CommonResp
+    //@Valid 开启之前在PageReq的校验规则
     @GetMapping("/list")
-    public CommonResp list(EbookQueryReq ebookReq) {
+    public CommonResp list(@Valid EbookQueryReq ebookReq) {
         //并不是所有时候都返回Ebook，可能只是返回一部分，如含有密码等需要过滤 定义EbookResp类
         //在controller中不要出现domain实体ebook
         CommonResp<PageResp<EbookQueryResp>> objectCommonResp = new CommonResp<>();
