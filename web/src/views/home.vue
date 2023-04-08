@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-         <a-layout-sider width="200" style="background: #fff">
+        <a-layout-sider width="200" style="background: #fff">
             <a-menu
                     mode="inline"
                     :style="{ height: '100%', borderRight: 0 }"
@@ -144,11 +144,11 @@ export default defineComponent({
 </script>
 <!--scoped表示样式只在当前组件起作用-->
 <style scoped>
-    .ant-avatar {
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
-        border-radius: 8%;
-        margin: 5px 0;
-    }
+.ant-avatar {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 8%;
+    margin: 5px 0;
+}
 </style>
