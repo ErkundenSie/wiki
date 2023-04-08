@@ -169,6 +169,7 @@ export default defineComponent({
          **/
         const handleQuery = (params: any) => {
             loading.value = true;
+            ebooks.value = []; //查询之前先清空，不清空编辑保存重新加载后再点编辑还是编辑前的数据
             //把params中的page、size传到后端，只写params:params传全部
             axios.get("/ebook/list",{
                 params: {
