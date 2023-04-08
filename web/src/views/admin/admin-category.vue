@@ -6,11 +6,7 @@
             <p><!--添加查询框-->
                 <a-form layout="inline" :model="param"><!--调用param-->
                     <a-form-item>
-                        <a-input v-model:value="param.name" placeholder="名称">
-                        </a-input>
-                    </a-form-item>
-                    <a-form-item>
-                        <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+                        <a-button type="primary" @click="handleQuery()">
                             查询
                         </a-button>
                     </a-form-item>
@@ -25,11 +21,10 @@
             <a-table
                     :columns="columns"
                     :row-key="record => record.id"
-                    :data-source="categorys"
-                    :pagination="pagination"
+                    :data-source="level1"
                     :loading="loading"
-                    @change="handleTableChange"
-            >
+                    :pagination="false"
+            ><!--除了后端删除分页数据前端:pagination="false"关闭分页，数据来源分类后的level1-->
                 <template #cover="{ text: cover }">
                     <img v-if="cover" :src="cover" alt="avatar"/>
                 </template>
@@ -88,12 +83,7 @@ export default defineComponent({
         const param = ref();
         param.value = {}; //定义并初始化param
         const categorys = ref();
-        //分页
-        const pagination = ref({
-            current: 1,
-            pageSize: 10,
-            total: 0
-        });
+
         const loading = ref(false);
 
         const columns = [
@@ -118,25 +108,22 @@ export default defineComponent({
         ];
 
         /**
-         * 数据查询
+         * 数据查询所有
+         * 并转成树形结构
          **/
-        const handleQuery = (params: any) => {
+        const level1 = ref();
+        const handleQuery = () => {
             loading.value = true;
             //把params中的page、size传到后端，只写params:params传全部
-            axios.get("/category/list",{
-                params: {
-                    page: params.page,
-                    size: params.size,
-                    name: param.value.name  //前端输入的名字传递到后端从响应式param拿到
-                }
-            }).then((response) => {
+            axios.get("/category/all").then((response) => {
                     loading.value = false;
                     const data = response.data;
                     if(data.success) {
-                        categorys.value = data.content.list;
-                        // 重置分页按钮
-                        pagination.value.current = params.page;
-                        pagination.value.total = data.content.total;
+                        categorys.value = data.content;
+                        console.log("原始数组：",categorys.value);
+                        level1.value = [];
+                        level1.value = Tool.array2Tree(categorys.value,0); //数据库一级分类对应的父id是000即0
+                        console.log("树形结构：",level1);
                     }else {
                         message.error(data.message) //data.message 返回后端的自定义的异常处理
                     }
@@ -144,16 +131,6 @@ export default defineComponent({
             });
         };
 
-        /**
-         * 表格点击页码时触发
-         */
-        const handleTableChange = (pagination: any) => {
-            console.log("看看自带的分页参数都有啥：" + pagination);
-            handleQuery({
-                page: pagination.current,
-                size: pagination.pageSize
-            });
-        };
         /**
          * 表单
          * 定义变量及方法
@@ -170,10 +147,7 @@ export default defineComponent({
                 if(data.success) {
                     //保存成功拿到结果后关闭窗口重新加载列表
                     modalVisible.value = false;
-                    handleQuery({
-                        page: pagination.value.current, //查当前页
-                        size: pagination.value.pageSize,
-                    });
+                    handleQuery();
                 }else {
                     message.error(data.message);
                 }
@@ -201,10 +175,7 @@ export default defineComponent({
                 const data = response.data; // data = commonResp
                 if(data.success) {
                     //重新加载列表
-                    handleQuery({
-                        page: pagination.value.current, //查当前页
-                        size: pagination.value.pageSize,
-                    });
+                    handleQuery();
                 }
             });
         }
@@ -214,20 +185,16 @@ export default defineComponent({
          */
         //初始查一次，返回到上面handleQuery方法，page,size需要和后端对应
         onMounted(() => {
-            handleQuery({
-                page: 1,
-                size: pagination.value.pageSize
-            });
+            handleQuery();
         });
 
         return {
             //表格的
             param,
-            categorys,
-            pagination,
+            //categorys,
+            level1,
             columns,
             loading,
-            handleTableChange,
             handleQuery,
 
             edit,

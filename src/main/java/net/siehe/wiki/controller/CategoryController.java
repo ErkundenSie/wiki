@@ -2,20 +2,35 @@ package net.siehe.wiki.controller;
 
 import net.siehe.wiki.req.CategoryQueryReq;
 import net.siehe.wiki.req.CategorySaveReq;
-import net.siehe.wiki.resp.CommonResp;
 import net.siehe.wiki.resp.CategoryQueryResp;
+import net.siehe.wiki.resp.CommonResp;
 import net.siehe.wiki.resp.PageResp;
 import net.siehe.wiki.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
     @Resource
     private CategoryService categoryService;
+
+    /**
+     * 查询所有
+     * @param
+     * @return
+     */
+    @GetMapping("/all")
+    public CommonResp all() {
+        CommonResp<List<CategoryQueryResp>> objectCommonResp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all();
+        objectCommonResp.setContent(list);
+        return objectCommonResp;
+    }
+
     //修改统一返回类型CommonResp
     //@Valid 开启之前在PageReq的校验规则
     @GetMapping("/list")

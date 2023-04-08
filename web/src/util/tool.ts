@@ -33,6 +33,9 @@ export class Tool {
   /**
    * 使用递归将数组转为树形结构
    * 父ID属性为parent
+   * 从array中把parent=id的全部拿出
+   * 传进来parentId=0即一级分类（自己数据库这么设计的000
+   * [id,name,children[id,name,children[...]嵌套
    */
   public static array2Tree (array: any, parentId: number) {
     if (Tool.isEmpty(array)) {
@@ -47,7 +50,7 @@ export class Tool {
         result.push(c);
 
         // 递归查看当前节点对应的子节点
-        const children = Tool.array2Tree(array, c.id);
+        const children = Tool.array2Tree(array, c.id);//已找到的id为父id查找子节点即下级分类
         if (Tool.isNotEmpty(children)) {
           c.children = children;
         }
