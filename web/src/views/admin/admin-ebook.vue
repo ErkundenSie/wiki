@@ -85,6 +85,7 @@
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
 
 
 export default defineComponent({
@@ -212,7 +213,7 @@ export default defineComponent({
          */
         const edit = (record: any) => {
             modalVisible.value = true;
-            ebook.value = record
+            ebook.value = Tool.copy(record); //修改表单时是对复制出的新对象进行修改=》不保存会变修改的问题
         };
         /**
          * 删除
