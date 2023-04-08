@@ -68,11 +68,13 @@
             <a-form-item label="名称">
                 <a-input v-model:value="ebook.name"/>
             </a-form-item>
-            <a-form-item label="分类一">
-                <a-input v-model:value="ebook.category1Id"/>
-            </a-form-item>
-            <a-form-item label="分类二">
-                <a-input v-model:value="ebook.category2Id"/>
+            <!--v-model:value="categoryIds"，绑定一个数组，label显示xx属性，value实际要取的值,当前对应的是从后端获取到分类的level1的看后面-->
+            <a-form-item label="分类">
+                <a-cascader
+                    v-model:value="categoryIds"
+                    :field-names="{ label: 'name', value: 'id', children: 'children' }"
+                    :options="level1"
+                />
             </a-form-item>
             <a-form-item label="描述">
                 <a-input v-model:value="ebook.description" type="textarea"/>
@@ -138,6 +140,27 @@ export default defineComponent({
                 slots: {customRender: 'action'}
             }
         ];
+        /**
+         * 查询所有分类
+         * 从admin-category复制
+         */
+        const level1 = ref();
+        const handleQueryCategory = () => {
+            loading.value = true;
+            axios.get("/category/all").then((response) => {
+                loading.value = false;
+                const data = response.data;
+                if (data.success) {
+                    const categorys = data.content;
+                    console.log("原始数组：",categorys.value);
+                    level1.value = [];
+                    level1.value = Tool.array2Tree(categorys, 0);
+                    console.log("树形结构：",level1);
+                } else {
+                    message.error(data.message);
+                }
+            });
+        }
 
         /**
          * 数据查询
@@ -181,11 +204,14 @@ export default defineComponent({
          * 定义变量及方法
          * 保存
          */
+        const categoryIds = ref();//数组 [100,101]：对应前端开发
         const ebook = ref({});
         const modalVisible = ref(false);
         const modalLoading = ref(false);
         const handleModalOk = () => {
             modalLoading.value = true; //先弹出窗口
+            ebook.value.category1Id = categoryIds.value[0];//0分给一级字段
+            ebook.value.category2Id = categoryIds.value[1];//1分给二级字段
             axios.post("/ebook/save",ebook.value).then((response) => {
                 modalLoading.value = false;//只要后端有返回就去掉
                 const data = response.data; // data = commonResp
@@ -214,6 +240,7 @@ export default defineComponent({
         const edit = (record: any) => {
             modalVisible.value = true;
             ebook.value = Tool.copy(record); //修改表单时是对复制出的新对象进行修改=》不保存会变修改的问题
+            categoryIds.value = [ebook.value.category1Id,ebook.value.category2Id] //显示分类级别
         };
         /**
          * 删除
@@ -236,6 +263,7 @@ export default defineComponent({
          */
         //初始查一次，返回到上面handleQuery方法，page,size需要和后端对应
         onMounted(() => {
+            handleQueryCategory(); //查出所有分类
             handleQuery({
                 page: 1,
                 size: pagination.value.pageSize
@@ -260,7 +288,9 @@ export default defineComponent({
             ebook,
             modalVisible,
             modalLoading,
-            handleModalOk
+            handleModalOk,
+            categoryIds,
+            level1,
         }
     }
 });
