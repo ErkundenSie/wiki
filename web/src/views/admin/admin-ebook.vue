@@ -81,7 +81,7 @@ export default defineComponent({
         //分页
         const pagination = ref({
             current: 1,
-            pageSize: 1001,
+            pageSize: 10,
             total: 0
         });
         const loading = ref(false);
@@ -170,15 +170,17 @@ export default defineComponent({
         const handleModalOk = () => {
             modalLoading.value = true; //先弹出窗口
             axios.post("/ebook/save",ebook.value).then((response) => {
+                modalLoading.value = false;//只要后端有返回就去掉
                 const data = response.data; // data = commonResp
                 if(data.success) {
                     //保存成功拿到结果后关闭窗口重新加载列表
                     modalVisible.value = false;
-                    modalLoading.value = false;
                     handleQuery({
                         page: pagination.value.current, //查当前页
                         size: pagination.value.pageSize,
                     });
+                }else {
+                    message.error(data.message);
                 }
             });
         }

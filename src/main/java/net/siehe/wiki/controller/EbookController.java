@@ -35,7 +35,7 @@ public class EbookController {
      * @return
      */
     @PostMapping("/save")
-    public CommonResp save(@RequestBody EbookSaveReq ebookReq) {
+    public CommonResp save(@Valid @RequestBody EbookSaveReq ebookReq) {
         CommonResp objectCommonResp = new CommonResp();//不需要返回直接不用泛型
         ebookService.save(ebookReq);
         return objectCommonResp;
