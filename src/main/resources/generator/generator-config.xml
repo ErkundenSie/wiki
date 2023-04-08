@@ -41,9 +41,10 @@
                              type="XMLMAPPER"/>
         <!--表名与生成实体类名称-->
 <!--        <table tableName="demo" domainObjectName="Demo"/>-->
-                <table tableName="ebook" domainObjectName="Ebook"/>  <!--默认就是Ebook可以不用写domainObjectName="Ebook"-->
+<!--                <table tableName="ebook" domainObjectName="Ebook"/>  &lt;!&ndash;默认就是Ebook可以不用写domainObjectName="Ebook"&ndash;&gt;-->
         <!--        <table tableName="category" domainObjectName="Category"/>-->
         <!--        <table tableName="doc"/>-->
 <!--        <table tableName="content"/>-->
+        <table tableName="category"/>
     </context>
 </generatorConfiguration>
