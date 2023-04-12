@@ -116,25 +116,26 @@ export default defineComponent({
         }
         //定义isShowWelcome函数
         const isShowWelcome = ref(true);
+        let categoryId2 = 0; //二级分类id变量
         const handleClick = (value: any)=> {
             // console.log("menu click")
-            // if(value.key == "welcome"){
-            //     isShowWelcome.value = true;
-            // }else {
-            //     isShowWelcome.value = false
-            // }
-            isShowWelcome.value = value.key == "welcome";//简化版
+            // isShowWelcome.value = value.key == "welcome";//简化版
+            if(value.key == "welcome"){
+                isShowWelcome.value = true;
+            }else {
+                isShowWelcome.value = false;
+                categoryId2 = value.key;//value.key为点击的id
+                handleQueryEbook();//查询结果
+            }
         };
-
-        onMounted(() => {
-            handleQueryCategory();//初始化调用加载分类
-            // console.log("onMounted2222");
+        const handleQueryEbook = () =>{
             // 在main.ts中修改axios默认请求地址就不用写前面的链接了
-            //params:{}返回后端，1000条一页（查出全部
+            //params:{}返回后端，1000条一页（根据categoryId2查出
             axios.get("/ebook/list", {
                 params: {
                     page: 1,
-                    size: 1000
+                    size: 1000,
+                    categoryId2: categoryId2,
                 }
             }).then(
                 (response) => {
@@ -144,6 +145,10 @@ export default defineComponent({
                     // console.log(response); axios 拦截器已使用
                 }
             );
+        }
+
+        onMounted(() => {
+            handleQueryCategory();//初始化调用加载分类，点击时加载具体数据
         });
 
         //返回数据

@@ -37,6 +37,10 @@ public class EbookService {
         if(!ObjectUtils.isEmpty(ebookReq.getName())){
             criteria.andNameLike("%" + ebookReq.getName() +"%");//添加条件左右匹配
         }
+        //根据分类id查
+        if(!ObjectUtils.isEmpty(ebookReq.getCategoryId2())) {
+            criteria.andCategory2IdEqualTo(ebookReq.getCategoryId2());
+        }
         //导入PageHelper依赖，调用PageHelper，注意此插件页码从1开始不是0，而且只对最近的select起作用对下面的ebookList=不起作用
         PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
