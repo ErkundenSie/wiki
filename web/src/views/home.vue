@@ -1,16 +1,16 @@
 <template>
     <a-layout>
         <a-layout-sider width="200" style="background: #fff">
+            <!--@click="handleClick"添加点击事件点击显示电子书-->
             <a-menu
                     mode="inline"
+                    @click="handleClick"
                     :style="{ height: '100%', borderRight: 0 }"
             >
                 <!--添加欢迎界面-->
                 <a-menu-item key="welcome">
-                    <router-link to="/">
                         <MailOutline/>
                         <span>欢迎</span>
-                    </router-link>
                 </a-menu-item>
                 <!--循环level1-->
                 <a-sub-menu v-for="item in level1" :key="item.id">
@@ -29,9 +29,13 @@
         <a-layout-content
                 :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
         >
+            <!--两个div互斥通过v-show="isShowWelcome"判断是否显示-->
+            <div class="welcome" v-show="isShowWelcome">
+                <h1>欢迎使用Siehe知识库</h1>
+            </div>
             <!-- <pre>{{ ebooks }}{{ ebooks2 }}</pre>&lt;!&ndash;pre标签就是会把里面长什么样含空格,原封不动的全部给你展示到页面上&ndash;&gt;-->
             <!--gutter: 20, column: 3 间距20,3列-->
-            <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :data-source="ebooks">
+            <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :data-source="ebooks">
                 <!--item为一个电子书-->
                 <template #renderItem="{ item }">
                     <a-list-item key="item.name">
@@ -110,10 +114,18 @@ export default defineComponent({
             });
 
         }
-        //测试方法点击打印日志
-        const handleClick = ()=> {
-            console.log("menu click")
+        //定义isShowWelcome函数
+        const isShowWelcome = ref(true);
+        const handleClick = (value: any)=> {
+            // console.log("menu click")
+            // if(value.key == "welcome"){
+            //     isShowWelcome.value = true;
+            // }else {
+            //     isShowWelcome.value = false
+            // }
+            isShowWelcome.value = value.key == "welcome";//简化版
         };
+
         onMounted(() => {
             handleQueryCategory();//初始化调用加载分类
             // console.log("onMounted2222");
@@ -150,6 +162,7 @@ export default defineComponent({
                 {type: 'LikeOutlined', text: '156'},
                 {type: 'MessageOutlined', text: '2'},
             ],
+            isShowWelcome,
             handleClick,
             level1,
         }
