@@ -85,11 +85,13 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 
 export default defineComponent({
     name: 'AdminDoc',
     setup() {
+        const route = useRoute();//获取路由信息
         const param = ref();
         param.value = {}; //定义并初始化param
         const docs = ref();
@@ -172,7 +174,10 @@ export default defineComponent({
          */
         const add = () => {
             modalVisible.value = true;
-            doc.value = {};
+            // 通过route获取新增文档时电子书id参数ebookId
+            doc.value = {
+                ebookId: route.query.ebookId
+            };
             treeSelectData.value = Tool.copy(level1.value);
             treeSelectData.value.unshift({id: 0, name: '无'})
         };
