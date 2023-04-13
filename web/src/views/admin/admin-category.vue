@@ -122,6 +122,7 @@ export default defineComponent({
         const level1 = ref();
         const handleQuery = () => {
             loading.value = true;
+            level1.value = [];//先清空数据
             //把params中的page、size传到后端，只写params:params传全部
             axios.get("/category/all").then((response) => {
                     loading.value = false;

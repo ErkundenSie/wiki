@@ -1,7 +1,7 @@
 <template>
     <a-layout>
         <a-layout-content
-                :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+            :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
         >
             <p><!--添加查询框-->
                 <a-form layout="inline" :model="param"><!--调用param-->
@@ -19,11 +19,11 @@
             </p>
 
             <a-table
-                    :columns="columns"
-                    :row-key="record => record.id"
-                    :data-source="level1"
-                    :loading="loading"
-                    :pagination="false"
+                :columns="columns"
+                :row-key="record => record.id"
+                :data-source="level1"
+                :loading="loading"
+                :pagination="false"
             ><!--除了后端删除分页数据前端:pagination="false"关闭分页，数据来源文档后的level1-->
                 <template #cover="{ text: cover }">
                     <img v-if="cover" :src="cover" alt="avatar"/>
@@ -32,7 +32,7 @@
                     <!--a-space空格组件-->
                     <a-space size="small">
                         <a-button type="primary" @click="edit(record)">
-                                编辑
+                            编辑
                         </a-button><!--handleDelete不能起名关键字-->
                         <a-popconfirm
                             title="删除后不可恢复，确认删除"
@@ -60,16 +60,18 @@
             <a-form-item label="名称">
                 <a-input v-model:value="doc.name"/>
             </a-form-item>
-            <a-form-item label="父文档"><!--添加下拉文本框，c in level1循环一级文档-->
-                <a-select
-                    ref="select"
+            <a-form-item label="父文档">
+                <!--treeSelectData是level1的复制修改版防止修改表单未保存时，表数据改变-->
+                <a-tree-select
                     v-model:value="doc.parent"
-                >
-                    <a-select-option value="0">无</a-select-option>
-                    <a-select-option v-for="c in level1" :value="c.id" :key="c.id" :disabled="doc.id===c.id">
-                        {{ c.name }}
-                    </a-select-option>
-                </a-select>
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :tree-data="treeSelectData"
+                    placeholder="请选择父文档"
+                    tree-default-expand-all
+                    :replaceFields="{title:'name',key:'id',value:'id'}"
+                ><!--属性转换-->
+                </a-tree-select>
             </a-form-item>
             <a-form-item label="顺序">
                 <a-input v-model:value="doc.sort"/>
@@ -115,26 +117,28 @@ export default defineComponent({
             }
         ];
 
+
         /**
          * 数据查询所有
          * 并转成树形结构
          **/
-        const level1 = ref();
+        const level1 = ref();//一级文档数，children属性是二级
         const handleQuery = () => {
             loading.value = true;
+            level1.value = [];//数据清空
             //把params中的page、size传到后端，只写params:params传全部
             axios.get("/doc/all").then((response) => {
-                    loading.value = false;
-                    const data = response.data;
-                    if(data.success) {
-                        docs.value = data.content;
-                        console.log("原始数组：",docs.value);
-                        level1.value = [];
-                        level1.value = Tool.array2Tree(docs.value,0); //数据库一级文档对应的父id是000即0
-                        console.log("树形结构：",level1);
-                    }else {
-                        message.error(data.message) //data.message 返回后端的自定义的异常处理
-                    }
+                loading.value = false;
+                const data = response.data;
+                if(data.success) {
+                    docs.value = data.content;
+                    console.log("原始数组：",docs.value);
+                    level1.value = [];
+                    level1.value = Tool.array2Tree(docs.value,0); //数据库一级文档对应的父id是000即0
+                    console.log("树形结构：",level1);
+                }else {
+                    message.error(data.message) //data.message 返回后端的自定义的异常处理
+                }
 
             });
         };
@@ -144,6 +148,8 @@ export default defineComponent({
          * 定义变量及方法
          * 保存
          */
+        const treeSelectData = ref();
+        treeSelectData.value = [];
         const doc = ref({});
         const modalVisible = ref(false);
         const modalLoading = ref(false);
@@ -160,13 +166,15 @@ export default defineComponent({
                     message.error(data.message);
                 }
             });
-        }
+        };
         /**
          * 新增
          */
         const add = () => {
             modalVisible.value = true;
-            doc.value = {}
+            doc.value = {};
+            treeSelectData.value = Tool.copy(level1.value);
+            treeSelectData.value.unshift({id: 0, name: '无'})
         };
         /**
          * 编辑
@@ -174,6 +182,9 @@ export default defineComponent({
         const edit = (record: any) => {
             modalVisible.value = true;
             doc.value = Tool.copy(record); //修改表单时是对复制出的新对象进行修改=》不保存会变修改的问题
+            treeSelectData.value = Tool.copy(level1.value);
+            setDisable(treeSelectData.value, record.id);//不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
+            treeSelectData.value.unshift({id: 0, name: '无'});//为选择树添加一个“无”,unshift在数组前面添加元素
         };
         /**
          * 删除
@@ -186,7 +197,30 @@ export default defineComponent({
                     handleQuery();
                 }
             });
-        }
+        };
+        /**
+         * 将某一个节点和他的子孙节点都设置为disabled
+         */
+        const setDisable = (treeSelectData: any, id: any) => {
+            //遍历数组，即遍历某一层节点
+            for (let i = 0; i < treeSelectData.length; i++) {
+                const node = treeSelectData[i];
+                if (node.id === id) {//找到id将目标节点设置为disable就不可编辑了
+                    node.disabled = true;
+                    const children = node.children;//拿出children
+                    if (Tool.isNotEmpty(children)) {//遍历子节点，设置不可编辑
+                        for (let j = 0; j < children.length; j++) {
+                            setDisable(children, children[j].id)
+                        }
+                    }
+                } else {//如果当前节点不是目标节点，则到其子节点再找找看
+                    const children = node.children;
+                    if (Tool.isNotEmpty(children)) {
+                        setDisable(children, id);
+                    }
+                }
+            }
+        };
 
         /**
          * 周期函数
@@ -213,7 +247,9 @@ export default defineComponent({
             doc,
             modalVisible,
             modalLoading,
-            handleModalOk
+            handleModalOk,
+            treeSelectData,
+
         }
     }
 });
