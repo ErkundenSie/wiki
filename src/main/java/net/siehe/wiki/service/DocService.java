@@ -102,10 +102,15 @@ public class DocService {
     /**
      * 删除
      *
-     * @param id
+     * @param
      */
-
-    public void delete(Long id) {
+    public void delete(long id) {
         docMapper.deleteByPrimaryKey(id);
+    }
+    public void delete(List<String> list) {
+        DocExample docExample = new DocExample();
+        DocExample.Criteria criteria = docExample.createCriteria();
+        criteria.andIdIn(list);
+        docMapper.deleteByExample(docExample);
     }
 }

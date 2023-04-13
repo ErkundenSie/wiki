@@ -195,7 +195,9 @@ export default defineComponent({
          * 删除
          */
         const handleDelete = (id: number) => {
-            axios.delete("/doc/delete/" + id).then((response) => {
+            // console.log(level1.value,id);//level1响应式变量加value
+            getDeleteIds(level1.value,id);//先查询查找整根树枝
+            axios.delete("/doc/delete/" + ids.join(",")).then((response) => {//把ids变成以,分隔的字符串
                 const data = response.data; // data = commonResp
                 if(data.success) {
                     //重新加载列表
@@ -222,6 +224,30 @@ export default defineComponent({
                     const children = node.children;
                     if (Tool.isNotEmpty(children)) {
                         setDisable(children, id);
+                    }
+                }
+            }
+        };
+        /**
+         * 模仿上面循环获得子孙节点,查找整根树枝
+         */
+        const ids: Array<string> = [];//放到该数组
+        const getDeleteIds = (treeSelectData: any, id: any) => {
+            for (let i = 0; i < treeSelectData.length; i++) {
+                const node = treeSelectData[i];
+                if (node.id === id) {//当前节点=目标节点
+                    console.log("disabled", node);
+                    ids.push(id);
+                    const children = node.children;
+                    if (Tool.isNotEmpty(children)) {
+                        for (let j = 0; j < children.length; j++) {
+                            getDeleteIds(children, children[j].id)
+                        }
+                    }
+                } else {
+                    const children = node.children;
+                    if (Tool.isNotEmpty(children)) {
+                        getDeleteIds(children, id);
                     }
                 }
             }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -51,15 +52,17 @@ public class DocController {
      */
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody DocSaveReq docReq) {
-        CommonResp objectCommonResp = new CommonResp();//不需要返回直接不用泛型
+        CommonResp objectCommonResp = new CommonResp<>();//不需要返回直接不用泛型
         docService.save(docReq);
         return objectCommonResp;
     }
 
-    @DeleteMapping ("/delete/{id}")
-    public CommonResp delete(@PathVariable Long id) {
-        CommonResp objectCommonResp = new CommonResp();//不需要返回直接不用泛型
-        docService.delete(id);
+
+    @DeleteMapping ("/delete/{idsStr}")
+    public CommonResp deleteIds(@PathVariable String idsStr) {
+        CommonResp objectCommonResp = new CommonResp<>();//不需要返回直接不用泛型
+        List<String> list = Arrays.asList(idsStr.split(","));//根据,拆分
+        docService.delete(list);
         return objectCommonResp;
     }
 }
